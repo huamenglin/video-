@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" href="css/common1.css" />
+		<link rel="stylesheet" href="css/video.css" />
+		<script>
+			document.documentElement.style.fontSize=document.documentElement.clientWidth/3.75+'px'
+		</script>
+	</head>
+	<body>
+		<div class="box">
+			<div class="player">
+				<!--<div class="posterImg"></div>-->
+				<video id="video" x5-playsinline="" playsinline="" webkit-playsinline="" muted poster="images/video_poster.png">
+					<source src="https://video.pearvideo.com/mp4/adshort/20190702/cont-1572578-14079299_adpkg-ad_sd.mp4">
+				</video>
+				<div class="controls">
+					<div class="playBtn"></div>
+					<div class="progress">
+						<div class="duration"></div>
+						<i></i>
+					</div>
+					<div class="time">
+						<span class="current">00:00</span>/<span class="totle">00:30</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body> 
+</html>
+<script type="text/javascript" src="js/jquery-3.2.1.js" ></script>
+<script>        
+	$(function(){			
+		var playBtn = document.querySelector('.playBtn'),
+			video = document.querySelector('#video'),
+			duration = document.querySelector('.duration'),
+			durationIcon = document.querySelector('.progress i'),
+			progress = document.querySelector('.progress'),
+			total = document.querySelector('.time .totle'),
+			current = document.querySelector('.time .current'),
+			cw = document.body.clientWidth ||document.documentElement.clientWidth,//屏幕宽度 
+			oL,//鼠标相对于拖拽圆点的偏移距离
+			//滑块宽度的一半
+			cirW = durationIcon.offsetWidth/2,
+			rate,
+			total_time,//视频总时长
+			current_time; //现在时间
+		video.addEventListener('canplay',function(){ //当浏览器能够开始播放指定的视频时			
+			//播放暂停按钮切换
+			playBtn.onclick = function(){
+				this.classList.toggle('pause');
+				if(video.paused){
+					video.play();
+				}else{
+					video.pause();
+				}
+			}		
+			//显示总时长
+			total_time = video.duration;//视频总时长
+		    var m = parseInt(total_time/60); //分
+		    var s = parseInt(total_time%60); //秒时
+		    m = m >= 10 ? m : "0"+m;
+		    s = s >= 10 ? s : "0"+s;
+		    total.innerHTML = m + ":" + s;
+		    //显示当前播放时间
+		    video.addEventListener('timeupdate',function(){
+		    	current_time = this.currentTime;
+		    	var _m = parseInt(current_time/60); //分
+		    	var _s = parseInt(current_time%60); //秒时
+		    	_m = _m >= 10 ? _m : "0"+_m;
+		    	_s = _s >= 10 ? _s : "0"+_s;
+		    	current.innerHTML = _m + ":" + _s;
+		    	//显示当前播放进度条
+		    	var new_width = (current_time/total_time)*progress.offsetWidth;
+			    duration.style.width = new_width + "px";
+			    durationIcon.style.left = (new_width - cirW) + 'px';	
+		    })
+		    //播放结束时
+		    video.addEventListener("ended",function(){
+		    	playBtn.classList.remove('pause');
+		    })
+			//进度条拖动
+			durationIcon.addEventListener('touchstart',function(e){
+				var ev = e || window.event;
+				var touch = ev.targetTouches[0];		
+				oL = touch.clientX - durationIcon.offsetLeft - progress.offsetLeft;//鼠标相对于拖拽圆点的偏移距离		
+			})
+			durationIcon.addEventListener('touchmove',function(e){
+				e.preventDefault();
+				var ev = e || window.event;
+				var touch = ev.targetTouches[0];
+				var oLeft = touch.clientX - progress.offsetLeft - oL ; //滑块最左端距离父元素最左端的距离
+				var durationWidth = oLeft + cirW;
+				if(oLeft<-cirW){
+					oLeft = -cirW;
+					durationWidth = 0;
+					
+				}else if(oLeft>progress.offsetWidth- cirW){
+					oLeft = progress.offsetWidth - cirW;
+					durationWidth = progress.offsetWidth;
+				}		
+				durationIcon.style.left = oLeft + 'px';	
+				duration.style.width = durationWidth + 'px';
+				rate = durationWidth/progress.offsetWidth * 100;
+				video.currentTime = (rate * total_time) / 100;
+			})
+			//拖动结束时的处理
+			durationIcon.addEventListener('touchend', function() {
+			 	document.removeEventListener("touchmove", function(e){
+			 		e.preventDefault();
+			 	});
+			});
+		})
+		
+	})
+</script>

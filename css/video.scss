@@ -1,0 +1,78 @@
+.player{
+    width: 100%;
+    height: 2.1rem;
+    position: relative;
+    background-color: #000;
+    #video{
+        width: 100%;
+        height: 100%;
+//      object-fit: fill;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .posterImg{
+        width: 100%;
+        height: 100%;
+        background-image: url(../images/video_poster.png);
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position:center;
+    }
+    .controls{
+        width: 100%;
+        height: .25rem;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        overflow: hidden;
+        padding: 0 .1rem;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .playBtn,.pause{
+            width: .16rem;
+            height: .16rem;
+            background-image: url(../images/playIcon.png);
+            background-repeat: no-repeat;
+            background-size: .145rem .16rem;
+            background-position: center;
+        }
+        .pause{
+            background-image: url(../images/pauseIcon.png);
+            background-size: .13rem .16rem;
+        }
+        .progress{
+            width: 71%;
+            height:.03rem;
+            background-color: #828282;
+            position: relative;
+            .duration{
+                width:0%;
+                height:.03rem;
+                background-color: #fedd3b;
+                position: absolute;
+                top: 0;
+                left: 0;
+                
+            }
+            i{
+                display: inline-block;
+                width: .14rem;
+                height: .14rem;
+                background-color: #fff;
+                border-radius: 50%;
+                position: absolute;
+                left:-.07rem;
+                top: -.055rem;
+            }
+        }
+        .time{
+            font-size: .11rem;
+            color: #fff;
+            line-height: .13rem;
+        }
+    }
+}
+
